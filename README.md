@@ -3,11 +3,11 @@
 [![NestJS](https://img.shields.io/badge/NestJS-10.0.0-red.svg)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/)
-[![Arduino](https://img.shields.io/badge/Arduino-1.8.19-blue.svg)](https://www.arduino.cc/)
+
 
 > **Proyecto desarrollado para el curso de Aseguramiento de la Calidad de Software** 🎯
 
-> **📋 Rama Principal (main) - Versión estable del proyecto** 🚀
+> **📋 Rama de Desarrollo (Dev) - Backend en construcción** 🔧
 
 ## 📋 Descripción del Proyecto
 
@@ -30,19 +30,10 @@ Diseñar un sistema automatizado de toma de pedidos para la **Heladería Sarita 
 - **Optimización de Servicio**: Optimizar los tiempos de atención al cliente y reducir los errores de comunicación en el proceso de toma de pedidos
 - **Gestión de Personal**: Asignar funciones específicas al personal involucrado (técnico, despachador, administrador), asegurando el correcto funcionamiento, supervisión y mantenimiento del sistema
 
-## 🏗️ Arquitectura del Sistema
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   Backend       │    │   Hardware      │
-│   (Web App)     │◄──►│   (NestJS)      │◄──►│   (Arduino)     │
-│                 │    │                 │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
 
 ## 🚀 Tecnologías Utilizadas
 
-### Backend
 - **NestJS 10** - Framework de Node.js para aplicaciones escalables
 - **TypeScript 5** - Lenguaje de programación tipado
 - **TypeORM** - ORM para gestión de base de datos
@@ -61,28 +52,69 @@ Diseñar un sistema automatizado de toma de pedidos para la **Heladería Sarita 
 - **Interfaces**: Contratos TypeScript
 - **Decoradores**: Metadatos y validación
 
-## 🔧 Configuración del Proyecto
+### Estructura del Backend
+```
+backend/
+├── src/                                    # Código fuente principal
+│   ├── main.ts                            # Punto de entrada de la aplicación
+│   ├── app.module.ts                      # Módulo principal de la aplicación
+│   ├── usuario/                            # Gestión de usuarios y autenticación
+│   ├── tipo-helado/                       # Tipos de helado disponibles
+│   ├── sabor/                             # Sabores de helado
+│   ├── complemento/                       # Toppings y aderezos
+│   ├── pedido/                            # Gestión de pedidos
+│   ├── pedido-item/                       # Items individuales de pedidos
+│   ├── pedido-item-bola/                  # Bolas específicas de helado
+│   └── pedido-item-complemento/           # Complementos en pedidos
+├── dist/                                   # Código compilado (generado)
+├── node_modules/                           # Dependencias de npm
+├── .vscode/                                # Configuración de VS Code
+├── package.json                            # Dependencias y scripts del proyecto
+├── nest-cli.json                           # Configuración de NestJS CLI
+├── tsconfig.json                           # Configuración de TypeScript
+├── eslint.config.mjs                       # Configuración de ESLint
+└── .prettierrc                             # Configuración de Prettier
+```
 
-### Base de Datos
-- **MySQL 8.0**: Configuración optimizada para desarrollo
-- **TypeORM**: Migraciones automáticas y sincronización
+### Módulos del Sistema
+1. **Usuario**: Gestión de perfiles y autenticación
+2. **Tipo Helado**: Categorías de helados (cono, vaso, etc.)
+3. **Sabor**: Sabores disponibles (vainilla, chocolate, etc.)
+4. **Complemento**: Toppings y aderezos
+5. **Pedido**: Órdenes completas de clientes
+6. **Pedido Item**: Items individuales de cada pedido
+7. **Pedido Item Bola**: Bolas específicas de helado
+8. **Pedido Item Complemento**: Complementos específicos
 
-## 🚀 Instalación y Configuración
+## 🔧 Estado de Implementación
 
-### Prerrequisitos
-- Node.js 18+
-- MySQL 8.0+
-- Git
+- **Entidades**: ✅ Completadas para todos los módulos
+- **DTOs**: 🔄 En desarrollo
+- **Controllers**: 🔄 En desarrollo  
+- **Services**: 🔄 En desarrollo
+- **APIs**: 🔄 Endpoints en construcción
 
-### Backend
+## 🚀 Instalación
+
 ```bash
 cd backend
 npm install
-npm run build
 npm run start:dev
 ```
 
+## 🎯 Próximos Pasos
+
+1. **Completar DTOs** para todas las entidades
+2. **Implementar Controllers** con endpoints REST
+3. **Desarrollar Services** con lógica de negocio
+4. **Configurar validaciones** con Class Validator
+5. **Implementar autenticación** y autorización
+6. **Crear tests unitarios** para cada módulo
+7. **Documentar APIs** con Swagger
+
+---
+
 <div align="center">
-  <p>🍦 <strong>HeladoExpress</strong> - Donde la tecnología se encuentra con la dulzura 🍦</p>
-  <p><em>Desarrollado con ❤️ para el curso de Aseguramiento de la Calidad de Software</em></p>
+  <p>🚀 <strong>Rama Dev</strong> - Donde se construye el futuro de HeladoExpress 🚀</p>
+  <p><em>Desarrollo activo del backend para el curso de Aseguramiento de la Calidad de Software</em></p>
 </div>
