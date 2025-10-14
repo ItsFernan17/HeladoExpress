@@ -1,25 +1,25 @@
-import { IsNotEmpty, IsString, IsNumber, MaxLength, MinLength, IsOptional } from 'class-validator';
-import { ICreatePedido } from '../Interfaces/pedido.interface';
+import { IsInt, IsPositive, IsNotEmpty, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreatePedidoDto implements ICreatePedido {
-  @IsNotEmpty({ message: 'El código es obligatorio' })
-  @IsString()
-  @MinLength(3, { message: 'El código debe tener al menos 3 caracteres' })
-  @MaxLength(50, { message: 'El código no debe exceder 50 caracteres' })
-  codigo: string;
+export class CreateDetallePedidoItemDto {
+  @IsNotEmpty({ message: 'El producto es obligatorio' })
+  @IsInt({ message: 'El producto debe ser un número entero' })
+  @IsPositive({ message: 'El producto debe ser un número positivo' })
+  producto_id: number;
 
-  @IsNotEmpty({ message: 'El estado del pedido es obligatorio' })
-  @IsString()
-  @MinLength(3, { message: 'El estado del pedido debe tener al menos 3 caracteres' })
-  @MaxLength(50, { message: 'El estado del pedido no debe exceder 50 caracteres' })
-  estado_pedido: string;
+  @IsNotEmpty({ message: 'La cantidad es obligatoria' })
+  @IsInt({ message: 'La cantidad debe ser un número entero' })
+  @IsPositive({ message: 'La cantidad debe ser un número positivo' })
+  cantidad: number;
+}
 
-  @IsOptional()
-  @IsString()
-  @MaxLength(1000, { message: 'Las notas no deben exceder 1000 caracteres' })
-  notas?: string;
+export class CreatePedidoDto {
+  @IsInt({ message: 'El estado debe ser un número entero' })
+  @IsPositive({ message: 'El estado debe ser un número positivo' })
+  estado_id: number;
 
-  @IsNotEmpty({ message: 'El ID del usuario de ingreso es obligatorio' })
-  @IsNumber({}, { message: 'El ID del usuario de ingreso debe ser un número' })
-  usuario_ingreso: number;
+  @IsNotEmpty({ message: 'Los detalles del pedido son obligatorios' })
+  @ValidateNested({ each: true })
+  @Type(() => CreateDetallePedidoItemDto)
+  detalles: CreateDetallePedidoItemDto[];
 }

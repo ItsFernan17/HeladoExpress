@@ -1,81 +1,45 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
-import { PedidoService } from './pedido.service';
-import { CreatePedidoDto } from './Dto/create-pedido.dto';
-import { UpdatePedidoDto } from './Dto/update-pedido.dto';
-import { DeletePedidoDto } from './Dto/delete-pedido.dto';
-import { IPedido } from './Interfaces/pedido.interface';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  ParseIntPipe,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { PedidoService } from './services/pedido.service';
+import { CreatePedidoCompleteDto } from './dto/create-pedido-complete.dto';
 
 @Controller('pedido')
 export class PedidoController {
   constructor(private readonly pedidoService: PedidoService) {}
 
-  // GET todos los pedidos
-  @Get()
-  async findAll(): Promise<IPedido[]> {
-    return await this.pedidoService.findAll();
-  }
-
-  // GET pedido por ID
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<IPedido> {
-    return await this.pedidoService.findOne(id);
-  }
-
-  // POST crear nuevo pedido
-  @Post()
+  @Post('completo')
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createPedidoDto: CreatePedidoDto): Promise<IPedido> {
-    return await this.pedidoService.create(createPedidoDto);
+  async createCompleto(@Body() dto: CreatePedidoCompleteDto) {
+    return await this.pedidoService.createComplete(dto);
   }
 
-  // PUT actualizar pedido
-  @Put(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updatePedidoDto: UpdatePedidoDto
-  ): Promise<IPedido> {
-    return await this.pedidoService.update(id, updatePedidoDto);
+  @Get('completos/todos')
+  async getAllPedidosCompletos() {
+    console.log('🔍 GET /completos/todos iniciado');
+    return await this.pedidoService.getAllPedidosCompletos();
   }
 
-  // DELETE eliminación lógica
-  @Delete(':id')
+  @Get('completos/:id')
+  async getPedidoCompleto(@Param('id', ParseIntPipe) id: number) {
+    console.log('🔍 GET /completos/:id iniciado con ID:', id);
+    return await this.pedidoService.getPedidoCompleto(id);
+  }
+
+  @Patch(':id/estado/:estadoId')
   @HttpCode(HttpStatus.OK)
-  async remove(
+  async changeStatus(
     @Param('id', ParseIntPipe) id: number,
-    @Body() deletePedidoDto: DeletePedidoDto
-  ): Promise<{ message: string }> {
-    return await this.pedidoService.remove(id, deletePedidoDto.usuario_modifica);
-  }
-
-  // Métodos adicionales
-  @Get('search/codigo/:codigo')
-  async searchByCodigo(@Param('codigo') codigo: string): Promise<IPedido[]> {
-    return await this.pedidoService.searchByCodigo(codigo);
-  }
-
-  @Get('estado/:estado')
-  async findByEstado(@Param('estado') estado: string): Promise<IPedido[]> {
-    return await this.pedidoService.findByEstado(estado);
-  }
-
-  @Get('usuario/:usuarioId')
-  async findByUsuarioIngreso(@Param('usuarioId', ParseIntPipe) usuarioId: number): Promise<IPedido[]> {
-    return await this.pedidoService.findByUsuarioIngreso(usuarioId);
-  }
-
-  @Get('stats/overview')
-  async getStats(): Promise<{ total: number; activos: number; inactivos: number }> {
-    return await this.pedidoService.getStats();
-  }
-
-  @Put(':id/reactivate')
-  async reactivate(@Param('id', ParseIntPipe) id: number): Promise<IPedido> {
-    return await this.pedidoService.reactivate(id);
-  }
-
-  @Get('generate/codigo')
-  async generateUniqueCodigo(): Promise<{ codigo: string }> {
-    const codigo = await this.pedidoService.generateUniqueCodigo();
-    return { codigo };
+    @Param('estadoId', ParseIntPipe) estadoId: number,
+  ) {
+    return await this.pedidoService.changeStatus(id, estadoId);
   }
 }

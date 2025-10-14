@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { SaborService } from './sabor.service';
-import { SaborController } from './sabor.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Sabor } from './Entities/sabor.entity';
-import { UsuarioModule } from '../usuario/usuario.module';
-
+import { SaborService } from './services/sabor.service';
+import { SaborController } from './sabor.controller';
+import { Sabor } from './entities/sabor.entity';
+import { SaborRepository } from './repositories/sabor.repository';
+import { SaborSeeder } from './seeds/sabor.seed';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Sabor]), UsuarioModule],
+  imports: [TypeOrmModule.forFeature([Sabor])],
   controllers: [SaborController],
-  providers: [SaborService],
-  exports: [SaborService],
+  providers: [SaborService, SaborRepository, SaborSeeder],
+  exports: [SaborService, SaborRepository, SaborSeeder],
 })
 export class SaborModule {}

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { EstadoModule } from './estado/estado.module';
 import { SaborModule } from './sabor/sabor.module';
-import { UsuarioModule } from './usuario/usuario.module';
-import { ComplementoModule } from './complemento/complemento.module';
-import { TipoHeladoModule } from './tipo-helado/tipo-helado.module';
 import { PedidoModule } from './pedido/pedido.module';
-import { PedidoItemModule } from './pedido-item/pedido-item.module';
-import { PedidoItemComplementoModule } from './pedido-item-complemento/pedido-item-complemento.module';
-import { PedidoItemBolaModule } from './pedido-item-bola/pedido-item-bola.module';
+import { CategoriaModule } from './categoria/categoria.module';
+import { ProductoModule } from './producto/producto.module';
+import { DetallePedidoModule } from './detalle-pedido/detalle-pedido.module';
+import { PedidoDetalleSaborModule } from './pedido-detalle-sabor/pedido-detalle-sabor.module';
+import { DatabaseSeeder } from './database.seeder';
 
 @Module({
   imports: [
@@ -24,16 +24,15 @@ import { PedidoItemBolaModule } from './pedido-item-bola/pedido-item-bola.module
       synchronize: true,
       dropSchema: false, 
     }),
+    EstadoModule,
     SaborModule,
-    UsuarioModule,
-    ComplementoModule,
-    TipoHeladoModule,
     PedidoModule,
-    PedidoItemModule,
-    PedidoItemComplementoModule,
-    PedidoItemBolaModule,
+    CategoriaModule,
+    ProductoModule,
+    DetallePedidoModule,
+    PedidoDetalleSaborModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [DatabaseSeeder],
 })
 export class AppModule {}

@@ -1,33 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { IPedido } from './interfaces/pedido.interface';
+import { Estado } from '../../estado/entities/estado.entity';
+import { DetallePedido } from '../../detalle-pedido/entities/detalle-pedido.entity';
 
 @Entity('pedido')
-export class Pedido {
+export class Pedido implements IPedido {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'bit', width: 1, default: true })
-  estado: boolean;
+  @ManyToOne(() => Estado, { eager: true })
+  @JoinColumn({ name: 'estado_id' })
+  estado_id: Estado;
 
-  @Column({ length: 50, unique: true })
-  codigo: string;
+  @Column({ type: 'varchar', length: 5, unique: true })
+  numero: string;
 
-  @Column({ length: 50 })
-  estado_pedido: string;
+  @Column({ type: 'boolean', default: true })
+  esta_activo: boolean;
 
-  @Column({ type: 'text', nullable: true })
-  notas: string;
-
-  @ManyToOne('Usuario', { nullable: true })
-  @JoinColumn({ name: 'usuario_ingreso' })
-  usuario_ingreso: any;
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
-  fecha_ingreso: Date;
-
-  @ManyToOne('Usuario', { nullable: true })
-  @JoinColumn({ name: 'usuario_modifica' })
-  usuario_modifica: any;
-
-  @Column({ type: 'timestamp', default: null, nullable: true })
-  fecha_modifica: Date;
+  @OneToMany(() => DetallePedido, detalle => detalle.pedido_id)
+  detalles: DetallePedido[];
 }

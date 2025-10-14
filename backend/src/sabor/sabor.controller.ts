@@ -1,49 +1,46 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
-import { SaborService } from './sabor.service';
-import { CreateSaborDto } from './Dto/create-sabor.dto';
-import { UpdateSaborDto } from './Dto/update-sabor.dto';
-import { DeleteSaborDto } from './Dto/delete-sabor.dto';
-import { ISabor } from './Interfaces/sabor.interface';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { SaborService } from './services/sabor.service';
+import { CreateSaborDto } from './dto/create-sabor.dto';
+import { UpdateSaborDto } from './dto/update-sabor.dto';
 
 @Controller('sabor')
 export class SaborController {
   constructor(private readonly saborService: SaborService) {}
 
-  // GET todos los sabores
-  @Get()
-  async findAll(): Promise<ISabor[]> {
-    return await this.saborService.findAll();
-  }
-
-  // GET sabor por ID
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ISabor> {
-    return await this.saborService.findOne(id);
-  }
-
-  // POST crear nuevo sabor
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createSaborDto: CreateSaborDto): Promise<ISabor> {
+  async create(@Body() createSaborDto: CreateSaborDto) {
     return await this.saborService.create(createSaborDto);
   }
 
-  // PUT actualizar sabor
-  @Put(':id')
+  @Get()
+  async findAll() {
+    return await this.saborService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.saborService.findOne(id);
+  }
+
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateSaborDto: UpdateSaborDto
-  ): Promise<ISabor> {
+    @Body() updateSaborDto: UpdateSaborDto,
+  ) {
     return await this.saborService.update(id, updateSaborDto);
   }
 
-  // DELETE eliminación lógica
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  async remove(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() deleteSaborDto: DeleteSaborDto
-  ): Promise<{ message: string }> {
-    return await this.saborService.remove(id, deleteSaborDto.usuario_modifica);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.saborService.remove(id);
   }
 }

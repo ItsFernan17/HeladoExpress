@@ -1,14 +1,12 @@
-import { IsNotEmpty, IsString, IsNumber, MaxLength, MinLength } from 'class-validator';
-import { ICreateSabor } from '../Interfaces/sabor.interface';
+import { IsNotEmpty, IsString, MaxLength, MinLength, Matches } from 'class-validator';
 
-export class CreateSaborDto implements ICreateSabor {
+export class CreateSaborDto {
   @IsNotEmpty({ message: 'El nombre es obligatorio' })
-  @IsString()
-  @MinLength(4, { message: 'El nombre del sabor debe tener al menos 4 caracteres' })
-  @MaxLength(50, { message: 'El nombre del sabor no debe exceder 50 caracteres' })
+  @IsString({ message: 'El nombre debe ser una cadena de texto' })
+  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
+  @MaxLength(50, { message: 'El nombre no puede tener más de 50 caracteres' })
+  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { 
+    message: 'El nombre solo puede contener letras y espacios' 
+  })
   nombre: string;
-
-  @IsNotEmpty({ message: 'El ID del usuario de ingreso es obligatorio' })
-  @IsNumber({}, { message: 'El ID del usuario de ingreso debe ser un número' })
-  usuario_ingreso: number;
 }
