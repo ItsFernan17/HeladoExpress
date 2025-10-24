@@ -1,17 +1,17 @@
-// app/(public)/layout.tsx
+// app/(admin)/layout.tsx
 import type { Metadata } from "next";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../../components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Pedidos | Sarita",
-  description: "Sistema de pedidos Sarita",
+  title: "Admin Dashboard | Sarita",
+  description: "Panel de administración Sarita",
   icons: {
     icon: "/icons/favicon.ico",
     shortcut: "/icons/favicon.ico",
   },
 };
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar/>
