@@ -7,7 +7,7 @@
 
 > **Proyecto desarrollado para el curso de Aseguramiento de la Calidad de Software** 🎯
 
-> **📋 Rama de Desarrollo (Dev) - Backend en construcción** 🔧
+> **📋 Rama de Funcionalidades (Feature) - Funcionalidad: Pruebas Unitarias e Integración Backend** 🧪✅
 
 ## 📋 Descripción del Proyecto
 
@@ -40,6 +40,8 @@ Diseñar un sistema automatizado de toma de pedidos para la **Heladería Sarita 
 - **MySQL 8** - Base de datos relacional
 - **Class Validator** - Validación de DTOs
 - **Class Transformer** - Transformación de datos
+- **Jest** - Framework de testing unitario e integración
+- **Supertest** - Testing de APIs HTTP
 - 
 ## 🏗️ Arquitectura del Backend
 
@@ -58,14 +60,27 @@ backend/
 ├── src/                                    # Código fuente principal
 │   ├── main.ts                            # Punto de entrada de la aplicación
 │   ├── app.module.ts                      # Módulo principal de la aplicación
-│   ├── usuario/                            # Gestión de usuarios y autenticación
-│   ├── tipo-helado/                       # Tipos de helado disponibles
+│   ├── categoria/                         # Categorías de productos
+│   ├── estado/                            # Estados de pedidos
+│   ├── producto/                          # Productos de helados disponibles
 │   ├── sabor/                             # Sabores de helado
-│   ├── complemento/                       # Toppings y aderezos
-│   ├── pedido/                            # Gestión de pedidos
-│   ├── pedido-item/                       # Items individuales de pedidos
-│   ├── pedido-item-bola/                  # Bolas específicas de helado
-│   └── pedido-item-complemento/           # Complementos en pedidos
+│   ├── pedido/                            # Gestión de pedidos completos
+│   ├── detalle-pedido/                    # Detalles de pedidos
+│   ├── pedido-detalle-sabor/              # Sabores en detalles de pedidos
+│   ├── image/                             # Gestión de imágenes
+│   ├── upload/                            # Configuración de subida de archivos
+│   └── utils/                             # Utilidades y validaciones
+├── tests/                                  # 🧪 Suite de pruebas
+│   ├── unit/                              # Pruebas unitarias
+│   │   ├── producto.service.spec.ts       # Tests del servicio de productos
+│   │   ├── pedido.service.spec.ts         # Tests del servicio de pedidos
+│   │   └── estado.service.spec.ts         # Tests del servicio de estados
+│   ├── integration/                       # Pruebas de integración
+│   │   ├── producto.controller.integration.spec.ts  # Tests HTTP de productos
+│   │   ├── pedido.controller.integration.spec.ts    # Tests HTTP de pedidos
+│   │   └── estado.controller.integration.spec.ts    # Tests HTTP de estados
+│   └── fixtures/                          # Datos de prueba y utilidades
+│       └── test-helpers.ts                # Mocks y helpers para testing
 ├── dist/                                   # Código compilado (generado)
 ├── node_modules/                           # Dependencias de npm
 ├── .vscode/                                # Configuración de VS Code
@@ -77,22 +92,59 @@ backend/
 ```
 
 ### Módulos del Sistema
-1. **Usuario**: Gestión de perfiles y autenticación
-2. **Tipo Helado**: Categorías de helados (cono, vaso, etc.)
-3. **Sabor**: Sabores disponibles (vainilla, chocolate, etc.)
-4. **Complemento**: Toppings y aderezos
-5. **Pedido**: Órdenes completas de clientes
-6. **Pedido Item**: Items individuales de cada pedido
-7. **Pedido Item Bola**: Bolas específicas de helado
-8. **Pedido Item Complemento**: Complementos específicos
+1. **Categoria**: Categorías de productos y helados
+2. **Estado**: Estados de pedidos (Pendiente, En Proceso, Completado, etc.)
+3. **Producto**: Productos de helados disponibles con precios
+4. **Sabor**: Sabores disponibles (vainilla, chocolate, fresa, etc.)
+5. **Pedido**: Órdenes completas de clientes con estado
+6. **Detalle Pedido**: Items individuales de cada pedido
+7. **Pedido Detalle Sabor**: Sabores específicos en cada detalle
+8. **Image**: Gestión de imágenes de productos
+9. **Upload**: Configuración y validación de archivos
 
 ## 🔧 Estado de Implementación
 
 - **Entidades**: ✅ Completadas para todos los módulos
-- **DTOs**: 🔄 En desarrollo
-- **Controllers**: 🔄 En desarrollo  
-- **Services**: 🔄 En desarrollo
-- **APIs**: 🔄 Endpoints en construcción
+- **DTOs**: ✅ Implementados con validaciones
+- **Controllers**: ✅ Desarrollados con endpoints REST  
+- **Services**: ✅ Lógica de negocio implementada
+- **APIs**: ✅ Endpoints funcionales
+- **Pruebas Unitarias**: ✅ 44 tests implementados (5 suites)
+- **Pruebas de Integración**: ✅ 43 tests implementados (5 suites)
+
+## 🧪 Testing y Calidad de Software
+
+### Pruebas Unitarias (44 tests)
+- **ProductoService**: 7 tests de lógica de negocio
+- **PedidoService**: 7 tests de gestión de pedidos  
+- **EstadoService**: 6 tests de estados de pedidos
+- **CategoriaService**: 11 tests de gestión de categorías
+- **SaborService**: 11 tests de gestión de sabores
+
+### Pruebas de Integración (43 tests)
+- **ProductoController**: 9 tests de endpoints HTTP
+- **PedidoController**: 8 tests de gestión de pedidos completos
+- **EstadoController**: 8 tests de endpoints de estados
+- **CategoriaController**: 8 tests de endpoints HTTP
+- **SaborController**: 10 tests de endpoints HTTP
+
+### Resultados del Testing
+- **Total Test Suites**: 10 (5 unitarias + 5 integración)
+- **Total Tests**: 87 (44 unitarias + 43 integración)
+- **Cobertura**: 100% de pasos exitosos
+- **Framework**: Jest v30.0.0 con Supertest para testing HTTP
+
+### Pruebas de Integración (23 tests)
+- **ProductoController**: 6 tests de endpoints HTTP
+- **PedidoController**: 8 tests de API REST
+- **EstadoController**: 9 tests de gestión de estados
+
+### Cobertura de Testing
+- **Tasa de Éxito**: 100% (43/43 tests)
+- **Servicios Vitales**: Completamente probados
+- **Endpoints Principales**: Validados con HTTP testing
+- **Validación de DTOs**: Verificada en integración
+- **Manejo de Errores**: Probado en todos los escenarios
 
 ## 🚀 Instalación
 
@@ -102,19 +154,35 @@ npm install
 npm run start:dev
 ```
 
+## 🧪 Ejecución de Pruebas
+
+```bash
+# Ejecutar todas las pruebas
+npm run test:all
+
+# Ejecutar solo pruebas unitarias
+npm run test:unit
+
+# Ejecutar solo pruebas de integración
+npm run test:integration
+
+# Ejecutar pruebas en modo watch
+npm run test:watch
+```
+
 ## 🎯 Próximos Pasos
 
-1. **Completar DTOs** para todas las entidades
-2. **Implementar Controllers** con endpoints REST
-3. **Desarrollar Services** con lógica de negocio
-4. **Configurar validaciones** con Class Validator
+1. **Expandir Cobertura de Testing** a módulos adicionales
+2. **Implementar E2E Testing** para flujos completos
+3. **Configurar CI/CD Pipeline** con testing automático
+4. **Documentar APIs** con Swagger/OpenAPI
 5. **Implementar autenticación** y autorización
-6. **Crear tests unitarios** para cada módulo
-7. **Documentar APIs** con Swagger
+6. **Optimizar Performance** basado en métricas de testing
+7. **Crear Mocks avanzados** para testing de servicios externos
 
 ---
 
 <div align="center">
-  <p>🚀 <strong>Rama Dev</strong> - Donde se construye el futuro de HeladoExpress 🚀</p>
-  <p><em>Desarrollo activo del backend para el curso de Aseguramiento de la Calidad de Software</em></p>
+  <p>🧪 <strong>Rama de Funcionalidades</strong> - Testing y Calidad de Software 🧪</p>
+  <p><em>Implementación de pruebas unitarias e integración para el backend de HeladoExpress</em></p>
 </div>

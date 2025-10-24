@@ -31,7 +31,15 @@ const refetch = useCallback(async () => {
 
     setList(normalized);
   } catch (e) {
-    setError(e as Error);
+    const error = e as Error;
+    console.log('🚨 Error al cargar pedidos:', error.message);
+    
+    // Si es un 404, probablemente no hay pedidos, no es un error grave
+    if (error.message.includes('404')) {
+      setList([]); // Lista vacía en lugar de error
+    } else {
+      setError(error);
+    }
   } finally {
     setLoading(false);
   }

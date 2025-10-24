@@ -8,4 +8,6 @@ export interface ICategoriaRepository {
   findActiveStates(): Promise<Categoria[]>;
   findActiveById(id: number): Promise<Categoria | null>;
   softDeleteById(id: number): Promise<void>;
+  findByNombre(nombre: string): Promise<Categoria | null>;
+  hasActiveProducts(categoriaId: number): Promise<boolean>;
 }

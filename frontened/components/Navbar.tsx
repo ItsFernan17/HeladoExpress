@@ -17,49 +17,66 @@ function horaGT() {
 }
 
 export default function Navbar() {
-  const [hora, setHora] = useState(horaGT());
+  const [hora, setHora] = useState<string>("");
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
-    const id = setInterval(() => setHora(horaGT()), 1000);
-    return () => clearInterval(id);
+    // Marcar que estamos en el cliente
+    setIsClient(true);
+    // Establecer hora inicial
+    setHora(horaGT());
+    
+    // Configurar intervalo para la hora
+    const timeInterval = setInterval(() => setHora(horaGT()), 1000);
+    
+    return () => {
+      clearInterval(timeInterval);
+    };
   }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#E61429] text-white">
       <nav
-        className={`mx-auto w-full px-6 py-2 flex items-center justify-between ${paytone.className}`}
+        className={`mx-auto w-full px-3 sm:px-6 py-2 flex items-center justify-between ${paytone.className}`}
       >
         {/* Izquierda: logo + helado + texto */}
-        <div className="flex items-center gap-4  ml-10">
+        <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-6">
           <Image
             src="/images/logo_sarita.webp"
             alt="Sarita"
-            width={170}
-            height={54}
+            width={140}
+            height={44}
+            className="w-20 h-auto sm:w-[140px]"
+            style={{ width: 'auto', height: 'auto' }}
             priority
           />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* Ícono EXACTO 25x37 */}
             <Image
               src="/icons/icon_helado.webp"
               alt="Ícono helado"
               width={25}
               height={37}
-              className="w-[25px] h-[37px]"
+              className="w-4 h-6 sm:w-[25px] sm:h-[37px]"
               priority
             />
             {/* Texto EXACTO 15px en #FFFFFF */}
-            <div className="leading-none text-white  text-center">
-              <div className="text-[20px]">Franquicia</div>
-              <div className="text-[20px] mt-1">Chuscaj</div>
+            <div className="leading-none text-white text-center">
+              <div className="text-xs sm:text-[18px]">Franquicia</div>
+              <div className="text-xs sm:text-[18px] sm:mt-1">Chuscaj</div>
             </div>
           </div>
         </div>
 
-        {/* Derecha: hora (12h con AM/PM) + estado */}
-        <div className="text-right leading-tight text-white mr-10">
-          <div className="text-[42px] tracking-tight">{hora}</div>
-          <div className="text-[26px] -mt-1">Conectado al Servidor</div>
+        {/* Derecha: hora (12h con AM/PM) */}
+        <div className="text-right leading-tight text-white mr-2 sm:mr-6">
+          <div className="text-lg sm:text-[38px] tracking-tight min-w-[80px] sm:min-w-[120px]">
+            {isClient ? hora : "--:-- --"}
+          </div>
+          <div className="text-xs sm:text-[22px] -mt-1">
+            Guatemala
+          </div>
         </div>
       </nav>
     </header>

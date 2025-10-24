@@ -23,6 +23,11 @@ export class UpdateProductoDto extends PartialType(CreateProductoDto) {
   precio_base?: number;
 
   @IsOptional()
+  @IsString({ message: 'La moneda debe ser una cadena de texto' })
+  @MaxLength(10, { message: 'La moneda no puede tener más de 10 caracteres' })
+  moneda?: string;
+
+  @IsOptional()
   @IsBoolean({ message: 'El estado activo debe ser verdadero o falso' })
   esta_activo?: boolean;
 }

@@ -7,8 +7,8 @@ export class UpdateSaborDto extends PartialType(CreateSaborDto) {
   @IsString({ message: 'El nombre debe ser una cadena de texto' })
   @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
   @MaxLength(50, { message: 'El nombre no puede tener más de 50 caracteres' })
-  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { 
-    message: 'El nombre solo puede contener letras y espacios' 
+  @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-\.]+$/, { 
+    message: 'El nombre solo puede contener letras, números, espacios, guiones y puntos' 
   })
   nombre?: string;
 

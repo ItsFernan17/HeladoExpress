@@ -51,4 +51,15 @@ export class ProductoRepository implements IProductoRepository {
       relations: ['categoria_id'],
     });
   }
+
+  async findByNombreAndCategoria(nombre: string, categoriaId: number): Promise<Producto | null> {
+    return await this.repository.findOne({
+      where: { 
+        nombre, 
+        esta_activo: true,
+        categoria_id: { id: categoriaId }
+      },
+      relations: ['categoria_id'],
+    });
+  }
 }

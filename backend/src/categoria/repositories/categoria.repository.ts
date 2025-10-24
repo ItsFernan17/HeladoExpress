@@ -48,4 +48,15 @@ export class CategoriaRepository implements ICategoriaRepository {
       where: { nombre, esta_activo: true },
     });
   }
+
+  async hasActiveProducts(categoriaId: number): Promise<boolean> {
+    const result = await this.repository
+      .createQueryBuilder('categoria')
+      .leftJoin('categoria.productos', 'producto')
+      .where('categoria.id = :categoriaId', { categoriaId })
+      .andWhere('producto.esta_activo = :activo', { activo: true })
+      .getCount();
+    
+    return result > 0;
+  }
 }

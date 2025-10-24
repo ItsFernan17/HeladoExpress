@@ -6,16 +6,22 @@ import PedidoCard from '@/components/PedidoCard';
 import { usePedidos } from '@/hooks/usePedido';
 import { useEstados } from '@/hooks/useEstado';
 import { usePedidoEstado } from '@/hooks/usePedidoEstado';
+import { GiIceCreamCone } from 'react-icons/gi';
+import { FiRefreshCw, FiCheck, FiX } from 'react-icons/fi';
 
 export default function PedidosPage() {
   const { list, setList, loading, error, refetch } = usePedidos();
   const { data: estados } = useEstados();
   const { cambiar, loading: patching } = usePedidoEstado();
 
+  // Refresco inteligente: más frecuente cuando hay pedidos, menos cuando no hay
   useEffect(() => {
-    const t = setInterval(refetch, 3000);
+    const hasOrders = list && list.length > 0;
+    const interval = hasOrders ? 3000 : 10000; // 3s con pedidos, 10s sin pedidos
+    
+    const t = setInterval(refetch, interval);
     return () => clearInterval(t);
-  }, [refetch]);
+  }, [refetch, list?.length]);
 
   // Balanceo simple por cantidad de items
   const { left, right } = useMemo(() => {
@@ -29,9 +35,94 @@ export default function PedidosPage() {
     return { left: L, right: R };
   }, [list]);
 
-  if (loading && !list) return <main className="p-6">Cargando…</main>;
-  if (error) return <main className="p-6">Error: {error.message}</main>;
+  if (loading && !list) {
+    return (
+      <main className="bg-gray-200 min-h-screen">
+        <div className="mx-auto max-w-[980px] px-3 sm:px-5 pt-20 pb-6">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+            <div className="bg-white rounded-3xl shadow-xl p-12 max-w-md mx-auto">
+              <div className="mb-6">
+                <FiRefreshCw size={48} className="mx-auto text-blue-500 animate-spin mb-4" />
+                <GiIceCreamCone size={40} className="mx-auto text-amber-500" />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Verificando pedidos...
+              </h2>
+              
+              <p className="text-gray-600 text-base">
+                Conectando con el sistema
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+  if (error) {
+    return (
+      <main className="bg-gray-200 min-h-screen">
+        <div className="mx-auto max-w-[980px] px-3 sm:px-5 pt-20 pb-6">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+            <div className="bg-white rounded-3xl shadow-xl p-12 max-w-md mx-auto">
+              <div className="mb-6">
+                <FiX size={64} className="mx-auto text-red-500 mb-4" />
+                <GiIceCreamCone size={48} className="mx-auto text-amber-500 opacity-50" />
+              </div>
+              
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                Error al cargar pedidos
+              </h2>
+              
+              <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+                No se pudieron cargar los pedidos en este momento.
+                <br />
+                <span className="text-red-600 font-medium">Reintentando automáticamente...</span>
+              </p>
+              
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                <p className="text-red-700 text-sm">
+                  <FiRefreshCw className="inline mr-2" size={16} />
+                  Reintentando automáticamente cada 10 segundos
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
   if (!list) return null;
+
+  // Estado cuando no hay pedidos
+  if (list.length === 0) {
+    return (
+      <main className="bg-gray-200 min-h-screen">
+        <div className="mx-auto max-w-[980px] px-3 sm:px-5 pt-20 pb-6">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+            <div className="bg-white rounded-3xl shadow-xl p-12 max-w-md mx-auto">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                ¡Todo al día! 🎉
+              </h2>
+              
+              <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+                No hay pedidos pendientes en este momento. 
+                <br />
+                <span className="text-amber-600 font-medium">¡Excelente trabajo!</span>
+              </p>
+              
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <p className="text-green-700 text-sm">
+                  <FiRefreshCw className="inline mr-2" size={16} />
+                  Monitoreando nuevos pedidos automáticamente cada 10 segundos
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   // --------------------------
   // ESPACIADO ENTRE TARJETAS
@@ -46,6 +137,25 @@ export default function PedidosPage() {
   return (
     <main className="bg-gray-200">
       <div className="mx-auto max-w-[980px] px-3 sm:px-5 pt-20 pb-6">
+        {/* Encabezado con contador de pedidos */}
+        <div className="text-center mb-8">
+          <div className="bg-white rounded-2xl shadow-lg p-6 inline-block">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+              Pedidos Activos
+            </h1>
+            <div className="flex items-center justify-center gap-2">
+              <GiIceCreamCone className="text-amber-500" size={24} />
+              <span className="text-lg font-semibold text-blue-600">
+                {list.length} {list.length === 1 ? 'pedido' : 'pedidos'} pendientes
+              </span>
+            </div>
+            <div className="mt-3 text-sm text-gray-500">
+              <FiRefreshCw className="inline mr-1" size={14} />
+              Actualizando cada 3 segundos
+            </div>
+          </div>
+        </div>
+
         {/* 2 columnas fijas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 items-start">
           {/* Columna izquierda */}

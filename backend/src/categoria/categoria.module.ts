@@ -4,12 +4,17 @@ import { CategoriaService } from './services/categoria.service';
 import { CategoriaController } from './categoria.controller';
 import { Categoria } from './entities/categoria.entity';
 import { CategoriaRepository } from './repositories/categoria.repository';
-import { CategoriaSeeder } from './seeds/categoria.seed';
+import { UploadModule } from '../upload/upload.module';
+import { ImageModule } from '../image/image.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Categoria])],
+  imports: [
+    TypeOrmModule.forFeature([Categoria]),
+    UploadModule,
+    ImageModule,
+  ],
   controllers: [CategoriaController],
-  providers: [CategoriaService, CategoriaRepository, CategoriaSeeder],
-  exports: [CategoriaService, CategoriaRepository, CategoriaSeeder],
+  providers: [CategoriaService, CategoriaRepository],
+  exports: [CategoriaService, CategoriaRepository],
 })
 export class CategoriaModule {}
