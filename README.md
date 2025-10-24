@@ -169,19 +169,6 @@ npm run test:integration
 # Ejecutar pruebas en modo watch
 npm run test:watch
 ```
-
-## 🎯 Próximos Pasos
-
-1. **Expandir Cobertura de Testing** a módulos adicionales
-2. **Implementar E2E Testing** para flujos completos
-3. **Configurar CI/CD Pipeline** con testing automático
-4. **Documentar APIs** con Swagger/OpenAPI
-5. **Implementar autenticación** y autorización
-6. **Optimizar Performance** basado en métricas de testing
-7. **Crear Mocks avanzados** para testing de servicios externos
-
----
-
 <div align="center">
   <p>🧪 <strong>Rama de Funcionalidades</strong> - Testing y Calidad de Software 🧪</p>
   <p><em>Implementación de pruebas unitarias e integración para el backend de HeladoExpress</em></p>
