@@ -116,7 +116,7 @@ describe('EstadoService - Unit Tests', () => {
 
       // Act & Assert
       await expect(service.findOne(id)).rejects.toThrow(NotFoundException);
-      await expect(service.findOne(id)).rejects.toThrow(`Estado con ID ${id} no encontrado`);
+      await expect(service.findOne(id)).rejects.toThrow('Estado con ID 999 no encontrado');
     });
   });
 
@@ -157,6 +157,7 @@ describe('EstadoService - Unit Tests', () => {
 
       // Act & Assert
       await expect(service.update(id, updateDto)).rejects.toThrow(NotFoundException);
+      await expect(service.update(id, updateDto)).rejects.toThrow('Estado con ID 999 no encontrado');
     });
   });
 

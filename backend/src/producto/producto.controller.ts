@@ -80,12 +80,12 @@ export class ProductoController {
   @Get()
   async findAll() {
     const productos = await this.productoService.findAll();
-    
+
     // Agregar información de imagen a cada producto
     const productosWithImages = await Promise.all(
       productos.map(async (producto) => {
         const image = await this.imageService.findByEntity('producto', producto.id);
-        
+
         const productoWithImage = {
           ...producto,
           image: image ? {
@@ -98,12 +98,46 @@ export class ProductoController {
             created_at: image.created_at
           } : null
         };
-        
+
         // Log para debugging
         if (image) {
           this.logger.log(`Producto ${producto.id} has image: ${image.filename}, URL: ${this.imageService.getImageUrl(image)}, UUID: ${image.uuid}`);
         }
-        
+
+        return productoWithImage;
+      })
+    );
+
+    return productosWithImages;
+  }
+
+  @Get('categoria/:categoriaId')
+  async findByCategoria(@Param('categoriaId', ParseIntPipe) categoriaId: number) {
+    const productos = await this.productoService.findByCategoria(categoriaId);
+
+    // Agregar información de imagen a cada producto
+    const productosWithImages = await Promise.all(
+      productos.map(async (producto) => {
+        const image = await this.imageService.findByEntity('producto', producto.id);
+
+        const productoWithImage = {
+          ...producto,
+          image: image ? {
+            id: image.id,
+            uuid: image.uuid,
+            filename: image.filename,
+            url: this.imageService.getImageUrl(image),
+            size: image.size,
+            esta_activo: image.esta_activo,
+            created_at: image.created_at
+          } : null
+        };
+
+        // Log para debugging
+        if (image) {
+          this.logger.log(`Producto ${producto.id} has image: ${image.filename}, URL: ${this.imageService.getImageUrl(image)}, UUID: ${image.uuid}`);
+        }
+
         return productoWithImage;
       })
     );

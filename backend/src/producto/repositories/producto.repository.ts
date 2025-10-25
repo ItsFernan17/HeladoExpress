@@ -54,10 +54,20 @@ export class ProductoRepository implements IProductoRepository {
 
   async findByNombreAndCategoria(nombre: string, categoriaId: number): Promise<Producto | null> {
     return await this.repository.findOne({
-      where: { 
-        nombre, 
+      where: {
+        nombre,
         esta_activo: true,
         categoria_id: { id: categoriaId }
+      },
+      relations: ['categoria_id'],
+    });
+  }
+
+  async findByCategoria(categoriaId: number): Promise<Producto[]> {
+    return await this.repository.find({
+      where: {
+        categoria_id: { id: categoriaId },
+        esta_activo: true
       },
       relations: ['categoria_id'],
     });

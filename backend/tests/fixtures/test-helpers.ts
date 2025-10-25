@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ObjectLiteral } from 'typeorm';
 
 // Función helper para crear módulos de prueba
 export const createTestingModule = async (moduleMetadata: any): Promise<TestingModule> => {
@@ -8,7 +8,9 @@ export const createTestingModule = async (moduleMetadata: any): Promise<TestingM
 };
 
 // Mock para repositorios con métodos específicos
-export const createMockRepository = <T = any>(): jest.Mocked<Repository<T>> => ({
+export const createMockRepository = <T extends ObjectLiteral = any>():
+  jest.Mocked<Repository<T>> =>
+  ({
   find: jest.fn(),
   findOne: jest.fn(),
   findOneBy: jest.fn(),

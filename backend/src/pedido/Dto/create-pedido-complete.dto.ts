@@ -15,7 +15,7 @@ export class CreatePedidoItemDto {
   @IsArray({ message: 'Los sabores deben ser un array' })
   @IsInt({ each: true, message: 'Cada sabor debe ser un número entero' })
   @IsPositive({ each: true, message: 'Cada sabor debe ser un número positivo' })
-  sabores: number[];
+  sabores?: number[];
 }
 
 export class CreatePedidoCompleteDto {

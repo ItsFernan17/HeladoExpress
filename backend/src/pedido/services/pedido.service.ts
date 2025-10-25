@@ -319,18 +319,57 @@ export class PedidoService implements IPedidoService {
         }),
       );
 
-      const saborIds = createPedidoCompleteDto.items
-        .flatMap((i) => i.sabores || [])
-        .filter((v) => v !== undefined && v !== null);
-      if (saborIds.length) {
-        await Promise.all(
-          saborIds.map(async (sid) => {
-            const s = await this.saborService.findOne(sid);
-            if (!s?.esta_activo) {
-              throw new BadRequestException(`El sabor con ID ${sid} no existe o no está activo`);
+      // Validar sabores por categoría de producto
+      for (const item of createPedidoCompleteDto.items) {
+        const producto = await this.productoService.findOne(item.productoId);
+        const categoriaNombre = producto.categoria_id?.nombre;
+
+        if (item.sabores && item.sabores.length > 0) {
+          // Validar que los sabores existan
+          await Promise.all(
+            item.sabores.map(async (sid) => {
+              const s = await this.saborService.findOne(sid);
+              if (!s?.esta_activo) {
+                throw new BadRequestException(`El sabor con ID ${sid} no existe o no está activo`);
+              }
+            }),
+          );
+
+          // Validar restricciones: primero por PRODUCTO específico, luego por CATEGORÍA
+          if (producto.nombre === 'Nevadas') {
+            // Para Nevadas, solo permitir Limón, Vainilla, Mandarina, Uva, Guanábana
+            const saboresPermitidos = ['Limón (línea de nieves)', 'Vainilla', 'Mandarina (línea de nieves)', 'Uva (línea de nieves)', 'Guanábana (línea de nieves)'];
+            const saboresSeleccionados = await Promise.all(
+              item.sabores.map(async (sid) => {
+                const s = await this.saborService.findOne(sid);
+                return s.nombre;
+              })
+            );
+
+            const saboresInvalidos = saboresSeleccionados.filter(s => !saboresPermitidos.includes(s));
+            if (saboresInvalidos.length > 0) {
+              throw new BadRequestException(
+                `Para Nevadas solo se permiten los sabores: ${saboresPermitidos.join(', ')}. Sabores inválidos: ${saboresInvalidos.join(', ')}`
+              );
             }
-          }),
-        );
+          } else if (categoriaNombre === 'Bebidas') {
+            // Para otras bebidas, solo permitir Vainilla, Fresa y Chocolate
+            const saboresPermitidos = ['Vainilla', 'Fresa', 'Chocolate'];
+            const saboresSeleccionados = await Promise.all(
+              item.sabores.map(async (sid) => {
+                const s = await this.saborService.findOne(sid);
+                return s.nombre;
+              })
+            );
+
+            const saboresInvalidos = saboresSeleccionados.filter(s => !saboresPermitidos.includes(s));
+            if (saboresInvalidos.length > 0) {
+              throw new BadRequestException(
+                `Para bebidas solo se permiten los sabores: ${saboresPermitidos.join(', ')}. Sabores inválidos: ${saboresInvalidos.join(', ')}`
+              );
+            }
+          }
+        }
       }
 
       const estadoNuevo = await this.estadoService.findByNombre('Nuevo');

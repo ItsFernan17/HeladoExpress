@@ -60,11 +60,15 @@ export class CategoriaService implements ICategoriaService {
       return savedCategoria;
     } catch (error) {
       this.logger.error(`Error al crear categoría: ${error.message}`, error.stack);
-      
+
       if (error instanceof BadRequestException || error instanceof ConflictException) {
         throw error;
       }
-      
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Error interno al crear la categoría');
     }
   }
@@ -156,7 +160,7 @@ export class CategoriaService implements ICategoriaService {
       }
 
       const categoria = await this.findOne(id);
-      
+
       // Verificar si la categoría tiene productos asociados
       const hasProducts = await this.categoriaRepository.hasActiveProducts(id);
       if (hasProducts) {
@@ -167,11 +171,11 @@ export class CategoriaService implements ICategoriaService {
       this.logger.log(`Categoría eliminada (lógicamente) exitosamente: ${categoria.nombre} (ID: ${categoria.id})`);
     } catch (error) {
       this.logger.error(`Error al eliminar categoría con ID ${id}: ${error.message}`, error.stack);
-      
+
       if (error instanceof BadRequestException || error instanceof NotFoundException) {
         throw error;
       }
-      
+
       throw new InternalServerErrorException('Error interno al eliminar la categoría');
     }
   }

@@ -8,4 +8,7 @@ export interface IProductoRepository {
   findActiveStates(): Promise<Producto[]>;
   findActiveById(id: number): Promise<Producto | null>;
   softDeleteById(id: number): Promise<void>;
+  findByNombre(nombre: string): Promise<Producto | null>;
+  findByNombreAndCategoria(nombre: string, categoriaId: number): Promise<Producto | null>;
+  findByCategoria(categoriaId: number): Promise<Producto[]>;
 }

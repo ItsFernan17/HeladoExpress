@@ -8,9 +8,25 @@ export class SaborSeeder {
 
   async seed(): Promise<void> {
     const saboresData: CreateSaborDto[] = [
+      { nombre: 'Queso fresa' },
+      { nombre: 'Ron con pasas' },
       { nombre: 'Fresa' },
       { nombre: 'Chocolate' },
       { nombre: 'Vainilla' },
+      { nombre: 'Chococereza' },
+      { nombre: 'Café Expresso' },
+      { nombre: 'Napolitano' },
+      { nombre: 'Galleta Oreo' },
+      { nombre: 'Chocochips' },
+      { nombre: 'Pistacho' },
+      { nombre: 'Piña Colada' },
+      { nombre: 'Café Capuchino' },
+      { nombre: 'Veteado de Mango' },
+      { nombre: 'Limón (línea de nieves)' },
+      { nombre: 'Mandarina (línea de nieves)' },
+      { nombre: 'Uva (línea de nieves)' },
+      { nombre: 'Guanábana (línea de nieves)' },
+      { nombre: 'Calabaza' },
     ];
 
     console.log('🌱 Iniciando seeding de Sabores...');

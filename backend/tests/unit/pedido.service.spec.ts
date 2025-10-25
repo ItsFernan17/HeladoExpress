@@ -7,6 +7,7 @@ import { DetallePedidoService } from '../../src/detalle-pedido/services/detalle-
 import { ProductoService } from '../../src/producto/services/producto.service';
 import { SaborService } from '../../src/sabor/services/sabor.service';
 import { DataSource } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 describe('PedidoService - Unit Tests', () => {
   let service: PedidoService;

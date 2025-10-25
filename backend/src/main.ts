@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Servir archivos estáticos (imágenes) - DEBE ir ANTES del prefijo global
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+  app.useStaticAssets(join(__dirname, '..', '..', 'uploads'), {
     prefix: '/api/v1/uploads/',
   });
 
@@ -37,9 +37,7 @@ async function bootstrap() {
 
   // 🔓 CORS (habilitar antes de listen)
   app.enableCors({
-    origin: [
-      'http://localhost:3000', // tu Next.js en dev
-    ],
+    origin: '*',
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: false, // pon true si vas a usar cookies/autenticación con credenciales
@@ -47,6 +45,6 @@ async function bootstrap() {
   });
 
   // Escuchar
-  await app.listen(process.env.PORT ?? 3001);
+  await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
 }
 bootstrap();

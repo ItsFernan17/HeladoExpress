@@ -76,11 +76,15 @@ export class ProductoService implements IProductoService {
       return savedProducto;
     } catch (error) {
       this.logger.error(`Error al crear producto: ${error.message}`, error.stack);
-      
-      if (error instanceof BadRequestException || error instanceof ConflictException || error instanceof NotFoundException) {
+
+      if (error instanceof BadRequestException || error instanceof ConflictException) {
         throw error;
       }
-      
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Error interno al crear el producto');
     }
   }
@@ -168,15 +172,26 @@ export class ProductoService implements IProductoService {
 
   async remove(id: number): Promise<void> {
     const producto = await this.findOne(id);
-    
-    if (!producto) {
-      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
-    }
 
     await this.productoRepository.softDeleteById(id);
   }
 
   async findByNombre(nombre: string): Promise<Producto | null> {
     return await this.productoRepository.findByNombre(nombre);
+  }
+
+  async findByCategoria(categoriaId: number): Promise<Producto[]> {
+    try {
+      // Validar que la categoria existe
+      await this.categoriaService.findOne(categoriaId);
+
+      const productos = await this.productoRepository.findByCategoria(categoriaId);
+      this.logger.log(`Encontrados ${productos.length} productos para categoría ${categoriaId}`);
+
+      return productos;
+    } catch (error) {
+      this.logger.error(`Error al buscar productos por categoría ${categoriaId}: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 }

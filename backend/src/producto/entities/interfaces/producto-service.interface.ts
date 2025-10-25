@@ -8,4 +8,6 @@ export interface IProductoService {
   findOne(id: number): Promise<Producto>;
   update(id: number, updateProductoDto: UpdateProductoDto): Promise<Producto>;
   remove(id: number): Promise<void>;
+  findByNombre(nombre: string): Promise<Producto | null>;
+  findByCategoria(categoriaId: number): Promise<Producto[]>;
 }

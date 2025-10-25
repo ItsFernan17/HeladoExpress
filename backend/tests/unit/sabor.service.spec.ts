@@ -211,7 +211,7 @@ describe('SaborService - Unit Tests', () => {
 
       // Act & Assert
       await expect(service.update(saborId, updateDto)).rejects.toThrow(NotFoundException);
-      await expect(service.update(saborId, updateDto)).rejects.toThrow(`Sabor con ID ${saborId} no encontrado`);
+      await expect(service.update(saborId, updateDto)).rejects.toThrow('Sabor con ID 999 no encontrado');
     });
   });
 
@@ -239,7 +239,7 @@ describe('SaborService - Unit Tests', () => {
 
       // Act & Assert
       await expect(service.remove(saborId)).rejects.toThrow(NotFoundException);
-      await expect(service.remove(saborId)).rejects.toThrow(`Sabor con ID ${saborId} no encontrado`);
+      await expect(service.remove(saborId)).rejects.toThrow('Sabor con ID 999 no encontrado');
     });
   });
 });

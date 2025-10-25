@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.4   # ← usa la misma versión que generó el volumen
+    container_name: sarita-chuscaj-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: sarita_chuscaj
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: ERICK3110alcon
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  backend:
+    image: itsferjo17/sarita-backend:latest
+    container_name: sarita-chuscaj-backend
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USERNAME: admin
+      DB_PASSWORD: ERICK3110alcon
+      DB_NAME: sarita_chuscaj
+      RUN_SEEDER: true
+      IMAGES_BASE_PATH: public-assets
+      IMAGES_TFT_DIR: tft
+      IMAGES_ORIGINALS_DIR: originals
+      PUBLIC_BASE_URL: http://localhost:3000
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    image: itsferjo17/sarita-frontend:latest
+    container_name: sarita-chuscaj-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_ENVIRONMENT: production
+      NEXT_PUBLIC_API_URL_DEVELOPMENT: http://backend:3001/api/v1
+      NEXT_PUBLIC_API_URL_PRODUCTION: http://backend:3001/api/v1
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  uploads:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

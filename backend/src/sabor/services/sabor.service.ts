@@ -60,11 +60,15 @@ export class SaborService implements ISaborService {
       return savedSabor;
     } catch (error) {
       this.logger.error(`Error al crear sabor: ${error.message}`, error.stack);
-      
+
       if (error instanceof BadRequestException || error instanceof ConflictException) {
         throw error;
       }
-      
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Error interno al crear el sabor');
     }
   }
@@ -127,10 +131,6 @@ export class SaborService implements ISaborService {
 
   async remove(id: number): Promise<void> {
     const sabor = await this.findOne(id);
-    
-    if (!sabor) {
-      throw new NotFoundException(`Sabor con ID ${id} no encontrado`);
-    }
 
     await this.saborRepository.softDeleteById(id);
   }

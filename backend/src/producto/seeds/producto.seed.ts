@@ -27,7 +27,7 @@ export class ProductoSeeder {
     // Productos de Especialidades
     const productosEspecialidades: Omit<CreateProductoDto, 'categoria_id'>[] = [
       { nombre: 'Bomba', precio_base: 32 },
-      { nombre: 'Banana Split', precio_base: 30 },
+      { nombre: 'Banana', precio_base: 30 },
       { nombre: 'Sundae Especial', precio_base: 28 },
       { nombre: 'Canasta Sundae', precio_base: 26 },
       { nombre: 'Sundae Galleta', precio_base: 24 },
@@ -36,17 +36,17 @@ export class ProductoSeeder {
 
     // Productos de Conos
     const productosConos: Omit<CreateProductoDto, 'categoria_id'>[] = [
-      { nombre: 'Choco Waffle', precio_base: 21 },
-      { nombre: 'Double Capuchino Waffle', precio_base: 21 },
+      { nombre: 'Choco Waffle Doble', precio_base: 21 },
+      { nombre: 'Doble Capuchino Waffle', precio_base: 21 },
       { nombre: 'Waffle Topping', precio_base: 16 },
-      { nombre: 'Waffle Double', precio_base: 18 },
+      { nombre: 'Waffle Doble', precio_base: 18 },
     ];
 
     // Productos de Bebidas
     const productosBebidas: Omit<CreateProductoDto, 'categoria_id'>[] = [
       { nombre: 'Milkshake', precio_base: 26 },
       { nombre: 'Topping Shake', precio_base: 28 },
-      { nombre: 'Nevada', precio_base: 28 },
+      { nombre: 'Nevadas', precio_base: 28 },
     ];
 
     // Crear productos de Especialidades
