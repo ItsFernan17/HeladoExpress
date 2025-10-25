@@ -17,6 +17,9 @@ export class Producto implements IProducto {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   precio_base: number;
 
+  @Column({ type: 'varchar', length: 10, default: 'Q' })
+  moneda: string;
+
   @Column({ type: 'boolean', default: true })
   esta_activo: boolean;
 }

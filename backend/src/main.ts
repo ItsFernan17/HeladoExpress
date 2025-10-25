@@ -1,10 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { DatabaseSeeder } from './database.seeder';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { GlobalExceptionFilter } from './utils/global-exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Servir archivos estáticos (imágenes) - DEBE ir ANTES del prefijo global
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/api/v1/uploads/',
+  });
+
+  // Filtro global de excepciones
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   // Pipes globales
   app.useGlobalPipes(
@@ -13,15 +23,14 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
       transformOptions: { enableImplicitConversion: true },
+      exceptionFactory: (errors) => {
+        const messages = errors.flatMap(error => 
+          Object.values(error.constraints || {})
+        );
+        return new Error(`Errores de validación: ${messages.join(', ')}`);
+      },
     }),
   );
-
-  // Seeding opcional
-  if (process.env.RUN_SEEDER === 'true') {
-    console.log('🌱 Ejecutando seeding automático...');
-    const seeder = app.get(DatabaseSeeder);
-    await seeder.seedAll();
-  }
 
   // Prefijo global
   app.setGlobalPrefix('api/v1');
@@ -29,8 +38,7 @@ async function bootstrap() {
   // 🔓 CORS (habilitar antes de listen)
   app.enableCors({
     origin: [
-      'http://localhost:3001', // tu Next.js en dev
-      // agrega aquí tu dominio en prod, p.ej. 'https://dideduchuehue.gob.gt'
+      'http://localhost:3000', // tu Next.js en dev
     ],
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -39,6 +47,6 @@ async function bootstrap() {
   });
 
   // Escuchar
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
