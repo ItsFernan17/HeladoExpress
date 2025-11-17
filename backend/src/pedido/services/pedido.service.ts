@@ -455,15 +455,35 @@ export class PedidoService implements IPedidoService {
     const pedidos = await this.pedidoRepository.findActiveStates();
     this.logger.log(`getAllPedidosCompletos: encontrados ${pedidos.length} pedidos`);
 
+    // Filtrar pedidos "Entregado" que tengan más de 2 minutos desde la última actualización
+    const now = new Date();
+    const twoMinutesAgo = new Date(now.getTime() - 2 * 60 * 1000);
+
+    const filteredPedidos = pedidos.filter(p => {
+      const estadoNombre = typeof p.estado_id === 'object' ? p.estado_id?.nombre : p.estado_id;
+      const isEntregado = estadoNombre?.toLowerCase().includes('entregado') || estadoNombre?.toLowerCase().includes('finalizado');
+
+      if (!isEntregado) return true; // Mantener pedidos que no están entregados
+
+      // Para pedidos entregados, verificar si updated_at existe y es mayor a 24 horas
+      const updatedAt = (p as any).updated_at;
+      if (!updatedAt) return true; // Si no tiene updated_at, mantenerlo (compatibilidad)
+
+      const updateDate = new Date(updatedAt);
+      return updateDate > twoMinutesAgo; // Mantener solo si fue actualizado en los últimos 2 minutos
+    });
+
+    this.logger.log(`getAllPedidosCompletos: después del filtro ${filteredPedidos.length} pedidos`);
+
     // Tipado explícito para evitar never[]
     const result: PedidoCompletoDTO[] = [];
-    for (const p of pedidos) {
+    for (const p of filteredPedidos) {
       result.push(await this.getPedidoCompleto(p.id));
     }
     return result;
 
     // Alternativa: en paralelo
-    // return Promise.all(pedidos.map((p) => this.getPedidoCompleto(p.id)));
+    // return Promise.all(filteredPedidos.map((p) => this.getPedidoCompleto(p.id)));
   }
 
   async getPedidoCompleto(pedidoId: number): Promise<PedidoCompletoDTO> {

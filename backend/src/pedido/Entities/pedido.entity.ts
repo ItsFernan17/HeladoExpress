@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany, UpdateDateColumn } from 'typeorm';
 import { IPedido } from './interfaces/pedido.interface';
 import { Estado } from '../../estado/entities/estado.entity';
 import { DetallePedido } from '../../detalle-pedido/entities/detalle-pedido.entity';
@@ -17,6 +17,9 @@ export class Pedido implements IPedido {
 
   @Column({ type: 'boolean', default: true })
   esta_activo: boolean;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @OneToMany(() => DetallePedido, detalle => detalle.pedido_id)
   detalles: DetallePedido[];
